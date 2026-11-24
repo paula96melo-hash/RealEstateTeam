@@ -14,6 +14,7 @@
 | 06 | [Social media strategy](06-social-media-strategy.md) | Platform roles, content pillars, cadence, YouTube/SEO, metrics, don'ts | Social/content, video |
 | 07 | [CRM & follow-up](07-crm-and-follow-up.md) | CRM options, data model, speed-to-lead, nurture cadences, automation guardrails | CRM/ops, follow-up |
 | 08 | [Biggest risks](08-risks.md) | 13 ranked risks with signals & mitigations | All; strategist & compliance |
+| — | [Expert agent roster](expert-roster.md) | 21 expert agent roles, global rules (human approval, no own contact, no protected-class targeting), 30 shared skills mapped to agents | Consultant / agent builder |
 
 ## Ten things every agent should know
 1. **Market:** rates back above 7% (7.28% on Nov 19, 2026); Palm Beach County volume down ~8% YoY; single-family prices holding/rising (WPB SF median ~$625k in Sep 2026, up from $540k), but **condos are a buyer's market** (~8.5 months supply).
