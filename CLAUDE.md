@@ -20,6 +20,8 @@ This project is a team of Claude Code subagents that advise a consultant buildin
 | Add or improve an agent or skill | `/improve-team [request]`, or "use the team-architect agent to …" |
 | Approve outgoing items | Open `drafts/approval-queue/`, read the reviewer notes, tick **Approved**, then send or publish it yourself |
 
+Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-experts.md).
+
 ## The team (22 agents in `.claude/agents/`)
 **Orchestrator:** `program-lead` takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.
 

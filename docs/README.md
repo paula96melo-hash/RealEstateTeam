@@ -16,6 +16,7 @@
 | 08 | [Biggest risks](08-risks.md) | 13 ranked risks with signals & mitigations | All; strategist & compliance |
 | — | [Expert agent roster](expert-roster.md) | 21 expert agent roles, global rules (human approval, no own contact, no protected-class targeting), 30 shared skills mapped to agents | Consultant / agent builder |
 | — | [CLAUDE.md](../CLAUDE.md) | How to use the 22-agent Claude Code team (`.claude/agents/`, `.claude/skills/`) and its guardrails | Everyone |
+| — | [How to talk to your experts](how-to-talk-to-your-experts.md) | Example prompts for the whole team, single experts, and multi-expert questions | Everyone |
 
 ## Ten things every agent should know
 1. **Market:** rates back above 7% (7.28% on Nov 19, 2026); Palm Beach County volume down ~8% YoY; single-family prices holding/rising (WPB SF median ~$625k in Sep 2026, up from $540k), but **condos are a buyer's market** (~8.5 months supply).
