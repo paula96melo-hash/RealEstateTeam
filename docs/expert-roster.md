@@ -132,3 +132,68 @@ No agent can skip a step, and nothing leaves the system without a human action.
 - Write each skill once and share it across agents (e.g., S08 Fair Housing Language Screen is used by 10 agents), so a rule changes in one place.
 - Give agents **read-only** data access and **draft-only** output tools; withhold send, post, publish, purchase, and contact tools entirely.
 - Re-check market figures and regulations before launch; see "Known gaps" in the [docs index](README.md).
+
+## 7. Implementation in Claude Code
+
+The roster is built as project subagents in `.claude/agents/` and project skills in `.claude/skills/<skill-name>/SKILL.md`. See [`CLAUDE.md`](../CLAUDE.md) for how to use the team and how the guardrails work.
+
+### Agent files
+| Roster ID | Agent file (`.claude/agents/`) |
+|---|---|
+| `ORCH` | `program-lead.md` (the orchestrator: takes any question, brings in experts, returns one combined answer) |
+| `MKT` | `market-analyst.md` |
+| `SEG` | `segmentation-strategist.md` |
+| `COMP` | `competitive-positioning-strategist.md` |
+| `CONDO` | `condo-due-diligence-specialist.md` |
+| `HFI` | `housing-finance-advisor.md` |
+| `LEAD` | `lead-generation-researcher.md` |
+| `WRITE` | `content-outreach-writer.md` |
+| `SOCIAL` | `social-media-manager.md` |
+| `VIDEO` | `video-youtube-producer.md` |
+| `SEO` | `seo-website-specialist.md` |
+| `ADS` | `paid-ads-specialist.md` |
+| `EVENTS` | `events-scout.md` |
+| `PARTNER` | `partner-network-builder.md` |
+| `CRM` | `crm-follow-up-manager.md` |
+| `TECH` | `marketing-ops-architect.md` |
+| `ANALYTICS` | `performance-analyst.md` |
+| `BUDGET` | `budget-analyst.md` |
+| `COMPLY` | `compliance-reviewer.md` |
+| `CONSENT` | `consent-privacy-advisor.md` |
+| `REG` | `regulatory-watch.md` |
+| *(added)* `META` | `team-architect.md` (meta agent: creates and improves agents and skills within the guardrails) |
+
+### Skill folders
+| Roster ID | Skill folder (`.claude/skills/`) |
+|---|---|
+| S01 | `research-library-navigation` |
+| S02 | `approval-queue-submission` |
+| S03 | `risk-flagging-escalation` |
+| S04 | `source-freshness-citation` |
+| S05 | `mls-market-data-analysis` |
+| S06 | `zip-neighborhood-profiling` |
+| S07 | `needs-based-segmentation` |
+| S08 | `fair-housing-language-screen` |
+| S09 | `frec-advertising-check` |
+| S10 | `compliant-ad-targeting` |
+| S11 | `lead-channel-evaluation` |
+| S12 | `copywriting-brand-voice` |
+| S13 | `lead-magnet-development` |
+| S14 | `video-scripting-repurposing` |
+| S15 | `content-calendar-planning` |
+| S16 | `local-seo-search-intent` |
+| S17 | `consent-dnc-verification` |
+| S18 | `crm-pipeline-nurture-design` |
+| S19 | `follow-up-drafting` |
+| S20 | `event-discovery-vetting` |
+| S21 | `partner-mapping-respa-check` |
+| S22 | `condo-document-interpretation` |
+| S23 | `housing-finance-insurance-explainers` |
+| S24 | `competitor-monitoring` |
+| S25 | `regulatory-change-monitoring` |
+| S26 | `kpi-tracking-reporting` |
+| S27 | `budget-runway-modeling` |
+| S28 | `data-privacy-security-hygiene` |
+| S29 | `tool-integration-specification` |
+| S30 | `workflow-orchestration-handoffs` |
+| *(added)* | `team-operating-rules` (all agents), `expert-panel-synthesis` (`program-lead`), `agent-skill-authoring` (`team-architect`), `ask-the-team` and `improve-team` (user entry points) |
