@@ -115,6 +115,9 @@ def validate_agent(text):
     for f in FORBIDDEN_AGENT_FIELDS:
         if field(fm, f) is not None:
             block(f"agent frontmatter field '{f}' is not allowed on this team.")
+    model = (field(fm, "model") or "").strip("'\"")
+    if model and model not in ("opus", "sonnet", "haiku", "inherit") and not model.startswith("claude-"):
+        block("model must be opus, sonnet, haiku, inherit, or a claude-* model ID.")
     tools = field(fm, "tools")
     if not tools:
         block("agent must declare an explicit single-line 'tools:' allowlist (omitting it inherits every tool).")

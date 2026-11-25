@@ -16,6 +16,7 @@
 | 08 | [Biggest risks](08-risks.md) | 13 ranked risks with signals & mitigations | All; strategist & compliance |
 | — | [Expert agent roster](expert-roster.md) | 21 expert agent roles, global rules (human approval, no own contact, no protected-class targeting), 30 shared skills mapped to agents | Consultant / agent builder |
 | — | [CLAUDE.md](../CLAUDE.md) | How to use the 22-agent Claude Code team (`.claude/agents/`, `.claude/skills/`) and its guardrails | Everyone |
+| — | [Agent brains & personalities](agent-brains.md) | Model chosen for each agent and why, plus each agent's name, voice, and working style | Everyone |
 | — | [How to talk to your experts](how-to-talk-to-your-experts.md) | Example prompts for the whole team, single experts, and multi-expert questions | Everyone |
 
 ## Ten things every agent should know

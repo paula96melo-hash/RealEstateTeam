@@ -19,6 +19,8 @@ The team's shared research lives in `docs/`. Read the relevant file before you a
 | 13 ranked risks | `docs/08-risks.md` |
 | Team roles and skill map | `docs/expert-roster.md` |
 | Index, top-10 takeaways, known gaps | `docs/README.md` |
+| Agent brains (models) and personas | `docs/agent-brains.md` |
+| **Your own reference documents** (read first, every time) | `knowledge/<your-agent-name>/` |
 
 How to use it:
 - Grep for the term first (`Grep` in `docs/`), then Read only the section you need.

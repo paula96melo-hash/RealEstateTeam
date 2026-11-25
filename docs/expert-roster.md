@@ -197,3 +197,6 @@ The roster is built as project subagents in `.claude/agents/` and project skills
 | S29 | `tool-integration-specification` |
 | S30 | `workflow-orchestration-handoffs` |
 | *(added)* | `team-operating-rules` (all agents), `expert-panel-synthesis` (`program-lead`), `agent-skill-authoring` (`team-architect`), `ask-the-team` and `improve-team` (user entry points) |
+
+### Brains, personas, and knowledge
+Each agent's model, first name, voice, and working style are listed in [agent-brains.md](agent-brains.md). Each agent reads its own `knowledge/<agent-name>/` folder before answering ([knowledge/README.md](../knowledge/README.md)); the repo is public, so those folders hold only sample or anonymized data.
