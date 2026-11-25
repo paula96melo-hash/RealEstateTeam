@@ -1,3 +1,6 @@
 # Team drafts may contain contact details or unapproved copy — keep them local.
 drafts/*
 !drafts/README.md
+
+# Local Netlify folder
+.netlify

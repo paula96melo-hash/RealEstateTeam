@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.netlify/
+# Generated at build time from the repo's agents, skills, docs, and knowledge folders
+src/generated/
+netlify/generated/
+.env
