@@ -6,6 +6,38 @@ A small React app for talking to the RealEstateTeam expert agents in your browse
 - **Chat window:** talk to one expert, with follow-up questions.
 - **Ask the whole team:** Morgan, the Program Lead, picks the experts. They answer in parallel, Grace (compliance) and Ivy (consent) review any drafts, and Morgan returns one combined answer. You can expand each expert's contribution.
 - **Drafts only:** the app shows drafts. It never sends, posts, publishes, or buys anything. You review each draft and send it yourself.
+- **Demo mode:** with no API key, the app runs on saved example answers instead of live AI. It needs no settings at all, so it's ready for a class submission or a public demo. See below.
+
+## Two modes
+
+| | **Demo mode** | **Live mode** |
+|---|---|---|
+| When | `ANTHROPIC_API_KEY` is **not** set in Netlify | `ANTHROPIC_API_KEY` **is** set |
+| Banner | "Demo mode: these are saved example answers, not live AI. Live answers turn on when an API key is added." | None |
+| Answers | Saved examples the real agents produced from fictional sample data | Live answers from Claude |
+| Cost | Free: no AI calls | Claude API usage |
+| Password | Not asked (there's nothing to protect) | Asked if `APP_PASSWORD` is set |
+
+The server function checks for the key, and the browser asks it which mode to use when the page loads. Adding or removing the key in Netlify and redeploying switches modes. Nothing else changes.
+
+## How demo mode works
+
+- **Meet the team:** a table of all 22 agents with role, persona (voice and working style), model (opus, sonnet, or haiku), and how many saved examples each one has.
+- **Pick an agent, then a question.** Each agent's saved example questions appear as buttons. You can also type your own question:
+  - If it matches a saved example, the app shows that answer labelled **Example answer**.
+  - If it doesn't, the app says no saved example matches and lists every available example to open.
+- **Ask the whole team (examples):** shows how Morgan split a question across three experts (Jordan, Walter, and Ollie), with each expert's contribution expandable, followed by Morgan's combined answer.
+- **No AI calls, ever.** Demo mode makes no requests to Claude and uses no API key.
+- **Where the examples come from.** The saved examples live in [`web/demo-examples/`](demo-examples/README.md), one Markdown file each. They were produced by the real team agents in Claude Code on Nov 25–26, 2026, from **fictional sample inputs only** (the repo is public; there is no real client, lead, or MLS data):
+
+| Example | Agent | Fictional input |
+|---|---|---|
+| Should my buyer sign this condo counteroffer? (Coral Heron Tower, Unit 5C) | Elena, condo due-diligence (opus) | The made-up counteroffer in `knowledge/condo-due-diligence-specialist/` |
+| Ask the whole team: my first 30 days of lead generation | Morgan, program lead (opus), with Jordan, Walter, and Ollie | $300/month and 8 hours a week |
+| Fair housing and compliance review of a sample Facebook ad | Grace, compliance reviewer (opus) | A made-up ad with deliberate problems ("perfect for young families", church, schools, targeting by age and sex) |
+| Follow-up drafts for a new online lead | Ollie, CRM and follow-up (sonnet) | A made-up lead, "Taylor Sample", who downloaded a condo checklist |
+
+To add an example: run the agent in Claude Code with sample data, save its answer as a new file in `web/demo-examples/` (copy the frontmatter of an existing one), and push. The build checks that each example names a real agent.
 
 ## How it works
 
@@ -23,7 +55,22 @@ Browser (React)  ──POST /api/chat──▶  Netlify Function (web/netlify/fu
 - **Refusal fallback:** Opus and Sonnet calls use Claude's server-side refusal fallback (`fallbacks: "default"`), so a request one model declines can be re-run on a fallback model. Haiku has no server-side fallback.
 - **In the web app, agents have no tools.** They can't browse, read files, or write to `drafts/`. Their skills, docs, and knowledge are already included in their instructions, and they're told to mark anything that needs live data as unverified.
 
-## Deploy to Netlify (step by step)
+## Deploy to Netlify: demo mode (no settings needed)
+
+This is the version for a class submission. It needs no API key and no environment variables.
+
+1. **Sign in to Netlify** with your GitHub account.
+2. **Create the site.** **Add new project → Import an existing project → GitHub**, then pick this repository and the `main` branch.
+3. **Keep the build settings as they are.** `netlify.toml` in the repo already tells Netlify everything (build folder `web`, build command, publish folder, functions folder, Node version).
+4. **Don't add any environment variables.**
+5. **Click Deploy.** It takes about a minute.
+6. **Open the site URL.**
+   - You should see the yellow demo banner and the "Meet the team" table.
+   - Click Elena, then her saved question, to see the counteroffer review labelled "Example answer".
+
+To switch to live answers later, follow the next section. The same site switches modes as soon as the key is added and the site is redeployed.
+
+## Deploy to Netlify: live mode (step by step)
 
 You need a Netlify account, a Claude API key from the [Claude Console](https://platform.claude.com/), and this repository on GitHub.
 
@@ -87,7 +134,8 @@ Then open http://localhost:8888. `npm run dev` alone starts only the front end, 
 
 | Symptom | Fix |
 |---|---|
-| "ANTHROPIC_API_KEY is not set" banner | Add the variable in Netlify, then trigger a new deploy |
+| Yellow "Demo mode" banner when you expected live answers | `ANTHROPIC_API_KEY` isn't set, or the site wasn't redeployed after adding it. Add it, then **Deploys → Trigger deploy** |
+| Demo banner says the server function could not be reached | The site was opened without its function (for example, only the `dist` folder was uploaded). Deploy the whole repo through Netlify instead |
 | "Wrong or missing password" | Re-enter the `APP_PASSWORD` value. Changing it in Netlify needs a redeploy. |
 | "The Claude API key is missing or invalid" | Check the key in the Claude Console and paste it again in Netlify |
 | "Rate limited" | Wait a minute, or raise your usage tier in the Claude Console |
@@ -102,6 +150,9 @@ web/scripts/build-team.mjs        Reads agents, skills, docs, knowledge at build
 web/netlify/functions/chat.mts    The only code that calls the Claude API
 web/netlify/lib/team.ts           Builds each agent's system prompt
 web/netlify/lib/auth.ts           Optional APP_PASSWORD check
-web/src/App.tsx                   Sidebar, chat, and the "Ask the whole team" flow
+web/src/App.tsx                   Live mode: chat and the "Ask the whole team" flow
+web/src/Demo.tsx                  Demo mode: roster, saved examples, question matching
+web/src/shared.tsx                Sidebar, badges, Markdown (used by both modes)
+web/demo-examples/                Saved example answers for demo mode (sample data only)
 web/src/api.ts                    Browser client for /api/chat (streaming)
 ```

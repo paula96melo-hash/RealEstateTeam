@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import teamJson from "./generated/team.json";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BY_NAME, CopyButton, LEAD, Markdown, ModelBadge, Sidebar, TEAM_KEY, who } from "./shared";
+import DemoApp from "./Demo";
 import {
   getConfig,
   getPassword,
@@ -14,20 +13,6 @@ import {
 } from "./api";
 
 // ---------- types ----------
-interface Agent {
-  name: string;
-  firstName: string;
-  title: string;
-  description: string;
-  group: string;
-  color: string;
-  tier: string;
-  modelId: string;
-  voice: string;
-  style: string;
-  skillCount: number;
-  knowledgeFiles: string[];
-}
 type Status = "planning" | "working" | "streaming" | "done" | "error" | "stopped";
 interface Step {
   agent: string;
@@ -48,55 +33,8 @@ interface ChatItem {
   steps?: Step[];
 }
 
-const TEAM: Agent[] = teamJson as Agent[];
-const BY_NAME = new Map(TEAM.map((a) => [a.name, a]));
-const TEAM_KEY = "__team__";
-const LEAD = "program-lead";
-
 const uid = () => Math.random().toString(36).slice(2, 10);
-const who = (name?: string) => {
-  const a = name ? BY_NAME.get(name) : undefined;
-  return a ? `${a.firstName} · ${a.title}` : name ?? "";
-};
-
 // ---------- small components ----------
-function ModelBadge({ tier }: { tier: string }) {
-  return <span className={`badge badge-${tier}`}>{tier}</span>;
-}
-
-function Markdown({ text }: { text: string }) {
-  return (
-    <div className="md">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{ a: ({ node: _node, ...props }) => <a {...props} target="_blank" rel="noreferrer noopener" /> }}
-      >
-        {text}
-      </ReactMarkdown>
-    </div>
-  );
-}
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      className="ghost small"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(text);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
-        } catch {
-          /* clipboard blocked */
-        }
-      }}
-    >
-      {copied ? "Copied" : "Copy draft"}
-    </button>
-  );
-}
-
 function StatusDot({ status }: { status: Status }) {
   const label: Record<Status, string> = {
     planning: "Planning",
@@ -129,70 +67,6 @@ function PasswordGate({ onSubmit, error }: { onSubmit: (pw: string) => void; err
         </button>
       </form>
     </div>
-  );
-}
-
-// ---------- sidebar ----------
-function Sidebar({
-  selected,
-  onSelect,
-  open,
-}: {
-  selected: string;
-  onSelect: (key: string) => void;
-  open: boolean;
-}) {
-  const groups = useMemo(() => {
-    const m = new Map<string, Agent[]>();
-    for (const a of TEAM) {
-      if (a.name === LEAD) continue;
-      m.set(a.group, [...(m.get(a.group) ?? []), a]);
-    }
-    return [...m.entries()];
-  }, []);
-  const lead = BY_NAME.get(LEAD);
-
-  return (
-    <aside className={`sidebar ${open ? "open" : ""}`}>
-      <div className="brand">
-        <strong>Expert Team</strong>
-        <span>West Palm Beach Realtor marketing</span>
-      </div>
-      <button className={`team-button ${selected === TEAM_KEY ? "active" : ""}`} onClick={() => onSelect(TEAM_KEY)}>
-        <span className="team-title">Ask the whole team</span>
-        <span className="team-sub">
-          {lead?.firstName ?? "Program Lead"} picks the experts and returns one answer
-        </span>
-      </button>
-      <nav>
-        {lead && <AgentRow agent={lead} active={selected === lead.name} onSelect={onSelect} />}
-        {groups.map(([group, agents]) => (
-          <div key={group} className="group">
-            <div className="group-label">{group}</div>
-            {agents.map((a) => (
-              <AgentRow key={a.name} agent={a} active={selected === a.name} onSelect={onSelect} />
-            ))}
-          </div>
-        ))}
-      </nav>
-      <p className="sidebar-foot">Drafts only. Nothing is sent from this app.</p>
-    </aside>
-  );
-}
-
-function AgentRow({ agent, active, onSelect }: { agent: Agent; active: boolean; onSelect: (k: string) => void }) {
-  return (
-    <button className={`agent-row ${active ? "active" : ""}`} onClick={() => onSelect(agent.name)} title={agent.description}>
-      <span className={`avatar c-${agent.color}`}>{agent.firstName[0]}</span>
-      <span className="agent-text">
-        <span className="agent-line">
-          <span className="agent-name">{agent.firstName}</span>
-          <ModelBadge tier={agent.tier} />
-        </span>
-        <span className="agent-title">{agent.title}</span>
-        <span className="agent-voice">{agent.voice}</span>
-      </span>
-    </button>
   );
 }
 
@@ -432,17 +306,9 @@ export default function App() {
   }
 
   // ----- render -----
-  if (configError) {
-    return (
-      <div className="gate">
-        <div className="gate-card">
-          <h1>Expert Team</h1>
-          <p className="error-text">{configError}</p>
-          <p className="muted">If you are running locally, use `npx netlify dev` so the server function is available.</p>
-        </div>
-      </div>
-    );
-  }
+  // Demo mode: no API key on the server (or the server function is unreachable). Show saved examples only.
+  if (configError) return <DemoApp reason="unreachable" />;
+  if (config && (config.mode === "demo" || !config.apiKeyConfigured)) return <DemoApp reason="no-key" />;
   if (!config) return <div className="gate"><p className="muted">Loading…</p></div>;
   if (!authed) {
     return (

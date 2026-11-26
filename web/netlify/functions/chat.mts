@@ -1,7 +1,7 @@
 // Netlify Function: the only place the Claude API is called. The API key stays on the server
 // (ANTHROPIC_API_KEY in Netlify environment variables) and never reaches the browser.
 //
-// GET  /api/chat -> { passwordRequired, apiKeyConfigured }
+// GET  /api/chat -> { mode: "live" | "demo", passwordRequired, apiKeyConfigured }
 // POST /api/chat -> one model call per request, streamed back as NDJSON lines:
 //   {"type":"text","text":"..."} ... {"type":"done", ...} or {"type":"error","message":"..."}
 // Modes: "agent" (chat with one expert), and the four team stages the browser runs in order:
@@ -162,13 +162,15 @@ ${reviews.length ? reviews.map((r) => `### Reviewer: ${r.agent}\n${clip(r.text, 
 // ---------- handler ----------
 export default async (req: Request): Promise<Response> => {
   if (req.method === "GET") {
-    return json({ passwordRequired: passwordRequired(), apiKeyConfigured: Boolean(process.env.ANTHROPIC_API_KEY) });
+    const live = Boolean(process.env.ANTHROPIC_API_KEY);
+    // No API key -> demo mode: the browser shows saved example answers and makes no model calls.
+    return json({ mode: live ? "live" : "demo", passwordRequired: live && passwordRequired(), apiKeyConfigured: live });
   }
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
-  if (!isAuthorized(req)) return json({ error: "Wrong or missing password." }, 401);
   if (!process.env.ANTHROPIC_API_KEY) {
-    return json({ error: "ANTHROPIC_API_KEY is not set. Add it in Netlify: Site configuration > Environment variables, then redeploy." }, 500);
+    return json({ demo: true, error: "Demo mode: no API key is set, so live answers are off. Add ANTHROPIC_API_KEY in Netlify and redeploy to turn them on." }, 503);
   }
+  if (!isAuthorized(req)) return json({ error: "Wrong or missing password." }, 401);
 
   let body: Record<string, unknown>;
   try {

@@ -141,7 +141,41 @@ const publicTeam = agents.map(({ body, knowledge, skills: s, docRefs, ...rest })
 }));
 const serverData = { builtAt: new Date().toISOString(), agents, skills, docs };
 
+// ---------- demo examples (saved answers shown when no API key is set) ----------
+const demoDir = path.join(WEB, "demo-examples");
+const demoExamples = [];
+for (const f of fs.existsSync(demoDir) ? fs.readdirSync(demoDir).sort() : []) {
+  if (!f.endsWith(".md") || f === "README.md") continue;
+  const file = path.join(demoDir, f);
+  const { fm, body } = splitFrontmatter(read(file), file);
+  for (const key of ["id", "agent", "title", "question"]) {
+    if (!fm[key]) throw new Error(`Demo example ${rel(file)} is missing "${key}"`);
+  }
+  if (!agents.find((a) => a.name === fm.agent)) throw new Error(`Demo example ${rel(file)} names unknown agent "${fm.agent}"`);
+  if (demoExamples.find((e) => e.id === fm.id)) throw new Error(`Duplicate demo example id "${fm.id}"`);
+  for (const [re, label] of SUSPICIOUS) {
+    if (re.test(body) && !/SAMPLE|FICTIONAL|placeholder/i.test(body)) warnings.push(`${rel(file)} may contain ${label}.`);
+  }
+  demoExamples.push({
+    id: String(fm.id),
+    agent: String(fm.agent),
+    title: String(fm.title),
+    question: String(fm.question),
+    keywords: Array.isArray(fm.keywords) ? fm.keywords.map(String) : [],
+    made: fm.made ? String(fm.made) : "",
+    input: fm.input ? String(fm.input).trim() : "",
+    team: fm.team === true,
+    partOf: fm.partOf ? String(fm.partOf) : null,
+    order: Number(fm.order ?? 0),
+    answer: body,
+  });
+}
+for (const e of demoExamples) {
+  if (e.partOf && !demoExamples.find((x) => x.id === e.partOf)) throw new Error(`Demo example ${e.id} has unknown partOf "${e.partOf}"`);
+}
+
 fs.mkdirSync(path.join(WEB, "src", "generated"), { recursive: true });
+fs.writeFileSync(path.join(WEB, "src", "generated", "demo-examples.json"), JSON.stringify(demoExamples, null, 2));
 fs.mkdirSync(path.join(WEB, "netlify", "generated"), { recursive: true });
 fs.writeFileSync(path.join(WEB, "src", "generated", "team.json"), JSON.stringify(publicTeam, null, 2));
 fs.writeFileSync(path.join(WEB, "netlify", "generated", "team-data.json"), JSON.stringify(serverData));
@@ -149,4 +183,5 @@ fs.writeFileSync(path.join(WEB, "netlify", "generated", "team-data.json"), JSON.
 const kb = Math.round(Buffer.byteLength(JSON.stringify(serverData)) / 1024);
 console.log(`build-team: ${agents.length} agents, ${Object.keys(skills).length} skills, ${Object.keys(docs).length} docs, ` +
   `${agents.reduce((n, a) => n + a.knowledge.length, 0)} knowledge files (${kb} KB server data)`);
+console.log(`build-team: ${demoExamples.length} demo examples`);
 for (const w of warnings) console.warn(`build-team WARNING: ${w}`);

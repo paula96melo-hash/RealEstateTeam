@@ -23,7 +23,7 @@ This project is a team of Claude Code subagents that advise a consultant buildin
 
 Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-experts.md).
 
-**Web app:** [`web/`](web/README.md) is a React app (deployed on Netlify) with the same team: a sidebar of agents, a chat window, and "Ask the whole team". It reads the agents, skills, docs, and knowledge folders at build time, calls the Claude API only from a Netlify Function (`ANTHROPIC_API_KEY`, optional `APP_PASSWORD`), and only shows drafts.
+**Web app:** [`web/`](web/README.md) is a React app (deployed on Netlify) with the same team: a sidebar of agents, a chat window, and "Ask the whole team". It reads the agents, skills, docs, and knowledge folders at build time, calls the Claude API only from a Netlify Function (`ANTHROPIC_API_KEY`, optional `APP_PASSWORD`), and only shows drafts. With no API key it runs in **demo mode**: saved example answers from `web/demo-examples/` (sample data only), clearly labelled, with no AI calls.
 
 ## The team (22 agents in `.claude/agents/`)
 **Orchestrator:** `program-lead` takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.

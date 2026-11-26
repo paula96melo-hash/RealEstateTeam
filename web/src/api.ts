@@ -21,6 +21,7 @@ export function setPassword(pw: string) {
 export class UnauthorizedError extends Error {}
 
 export interface ServerConfig {
+  mode?: "live" | "demo";
   passwordRequired: boolean;
   apiKeyConfigured: boolean;
 }
