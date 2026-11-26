@@ -8,7 +8,7 @@ description: "Combine several experts' outputs into one coherent answer: reconci
 **Steps**
 1. Collect each expert's output; note sources and confidence for each claim.
 2. **Reconcile:** where experts disagree, prefer 🟢 over 🟡 over 🔴 sources and the more recent date; if still unresolved, present both views and what would settle it.
-3. **Compliance precedence:** if `compliance-reviewer` or `consent-privacy-advisor` flags something, their finding wins — revise or remove the item and say so.
+3. **Decision rules:** apply the decision-log skill's rules in order. Compliance (`compliance-reviewer`) and consent (`consent-privacy-advisor`) findings win; Dan's budget and weekly-hours limits cap any plan; anything uncertain, about money, legal risk, or client contact goes to Dan. For each disagreement, state it, the tie-breaker used, and the final recommendation.
 4. **De-duplicate** and order by what the human should do first.
 5. Keep it decision-ready: plain language, numbers with sources, no internal chatter.
 
@@ -23,6 +23,9 @@ Sections by topic, each with cited facts.
 ## ⚠️ Escalations & risks
 Items needing broker, attorney, CPA, lender, or insurance professional.
 
+## Dan must approve
+Each item that needs Dan's decision (spend, client contact, legal-risk items, open "TO CONFIRM WITH DAN" values). Morgan recommends; Dan decides.
+
 ## Awaiting your approval
 Drafts saved in drafts/approval-queue/ (file — status).
 
@@ -32,4 +35,4 @@ agent — what they contributed.
 ## Sources
 ```
 
-Never present a draft as sent or approved. Never drop a compliance flag to shorten the answer.
+Never present a draft as sent or approved. End with a decision log entry (decision-log skill). Never drop a compliance flag to shorten the answer.

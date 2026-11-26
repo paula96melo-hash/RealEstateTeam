@@ -115,7 +115,7 @@ const PlanSchema = z.object({
 function planPrompt(question: string, context: string): string {
   return `You are planning how the team answers the consultant's question. In this web app you cannot spawn agents yourself; the app will run the experts you choose and send their answers back to you for the final synthesis.
 
-Pick the smallest set of 1 to 5 specialists using your routing table. Do not pick compliance-reviewer or consent-privacy-advisor as experts; set needs_compliance and needs_consent instead, and the app will run them after the drafts exist. Write each brief so the expert can work without seeing this conversation: the specific sub-question, what to focus on, and the output you want back.
+Pick the smallest set of 1 to 5 specialists using your routing table. Put Dan's budget and weekly-hours limits from your business brief into every brief they affect. Do not pick compliance-reviewer or consent-privacy-advisor as experts; set needs_compliance and needs_consent instead, and the app will run them after the drafts exist. Write each brief so the expert can work without seeing this conversation: the specific sub-question, what to focus on, and the output you want back.
 
 needs_compliance = true if any expert will draft outward-facing material (posts, ads, emails, texts, web copy, flyers, scripts, event invites, ad targeting).
 needs_consent = true if anything involves calls, texts, emails to contacts, consent capture, or contact data.
@@ -147,7 +147,8 @@ ${outputs.map((o) => `### From ${o.agent}\n${clip(o.text, 8000)}`).join("\n\n")}
 
 function synthesisPrompt(question: string, framing: string, outputs: { agent: string; text: string }[], reviews: { agent: string; text: string }[], context: string): string {
   return `Your experts have answered. Combine their work into one answer for the consultant, using your expert-panel-synthesis format.
-- Compliance and consent findings win: revise or remove flagged items and say so.
+- Apply your decision rules in order: compliance (Grace) and consent (Ivy) findings override marketing; Dan's budget and weekly-hours limits from your business brief override any plan that exceeds them; anything uncertain, about money, legal risk, or client contact goes to Dan. For each disagreement between experts, state it, the tie-breaker you used, and your final recommendation.
+- You recommend; Dan decides. Include a "Dan must approve" section, and end with a "Decision log entry" (status PROPOSED) as described in your decision-log skill.
 - In this web app there is no drafts/ folder. Replace the "Awaiting your approval" section with "Drafts in this answer (not sent)", listing each draft and what review it still needs.
 - About 700 words plus any drafts. Keep citations and confidence markers.
 ${context ? `\nRecent conversation, for context:\n${context}\n` : ""}

@@ -26,7 +26,7 @@ Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-
 **Web app:** [`web/`](web/README.md) is a React app (deployed on Netlify) with the same team: a sidebar of agents, a chat window, and "Ask the whole team". It reads the agents, skills, docs, and knowledge folders at build time, calls the Claude API only from a Netlify Function (`ANTHROPIC_API_KEY`, optional `APP_PASSWORD`), and only shows drafts. With no API key it runs in **demo mode**: saved example answers from `web/demo-examples/` (sample data only), clearly labelled, with no AI calls.
 
 ## The team (22 agents in `.claude/agents/`)
-**Orchestrator:** `program-lead` takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.
+**Orchestrator:** `program-lead` (Morgan) takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. Morgan is the team's decision-maker for recommendations: Morgan reads Dan's business brief (`knowledge/program-lead/business-brief.md`), resolves disagreements with fixed rules (compliance and consent override marketing; Dan's budget and weekly-hours limits override any plan; anything uncertain, involving money, legal risk, or client contact goes to Dan), and records each recommendation in `drafts/decision-log.md`. **Morgan recommends; Dan decides. Everything stays a draft.** It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.
 
 **Meta:** `team-architect` creates and improves agents and skills. It writes only to `.claude/agents/`, `.claude/skills/`, and `drafts/`, and a validator rejects any file that breaks the guardrails.
 
@@ -46,10 +46,10 @@ Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-
 - Full table with the reason for each choice: [docs/agent-brains.md](docs/agent-brains.md).
 - Knowledge folders: [knowledge/README.md](knowledge/README.md). Agents read them but can't write to them; a human adds files after checking for personal data.
 
-## Skills (35 in `.claude/skills/`)
+## Skills (36 in `.claude/skills/`)
 - **Shared by every agent:** `team-operating-rules`, `research-library-navigation`, `approval-queue-submission`, `risk-flagging-escalation`.
 - **The 30 roster skills** (S01–S30 in `docs/expert-roster.md` §3) are wired to the agents listed there through each agent's `skills:` frontmatter, which preloads them. Examples: `fair-housing-language-screen` (10 agents), `consent-dnc-verification`, `condo-document-interpretation`, `crm-pipeline-nurture-design`.
-- **Orchestration and meta:** `workflow-orchestration-handoffs` (routing table), `expert-panel-synthesis`, `agent-skill-authoring`.
+- **Orchestration and meta:** `workflow-orchestration-handoffs` (routing table), `expert-panel-synthesis`, `decision-log` (Morgan's conflict rules and decision log), `agent-skill-authoring`.
 - **Entry points (user-invoked):** `/ask-the-team` (runs `program-lead`) and `/improve-team` (runs `team-architect`).
 
 ## Guardrails (how "read-only and draft-only" is enforced)
@@ -64,11 +64,12 @@ Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-
 ```
 docs/                 Research (01–08), README index, expert-roster.md (roles + skill map)
 .claude/agents/       22 subagents
-.claude/skills/       35 skills (one folder each, SKILL.md)
+.claude/skills/       36 skills (one folder each, SKILL.md)
 .claude/hooks/        guard_writes.py, restrict_agent_spawn.py
 knowledge/            One folder per agent, read before every answer (sample/anonymized data only)
 web/                  React web app + Netlify Function (see web/README.md); netlify.toml at the repo root
-drafts/               The only place agents write (gitignored except README)
+drafts/               The only place agents write (gitignored except README and decision-log.md)
+  decision-log.md     Morgan's decisions: what, why, disagreements, what Dan must approve
   approval-queue/     Items awaiting compliance review and human approval
   answers/  regulatory-updates/  team-changes/
 ```

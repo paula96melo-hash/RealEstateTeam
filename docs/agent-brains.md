@@ -37,6 +37,18 @@ Rule of thumb: if a wrong answer could create legal, financial, or fair-housing 
 | `regulatory-watch` | **Henry** | `opus` | Interpreting rule changes and their effective dates is legal analysis; accuracy matters more than speed. | Vigilant librarian of the rules. Dry, exact, always cites the primary source. | Checks official sources, writes dated change notes with links, and marks anything interpretive for the broker or an attorney. |
 | `team-architect` | **Quinn** | `opus` | Editing agents and skills is security-sensitive: it must keep every guardrail intact while improving the team. | Thoughtful builder. Explains the change and why it is safe. | Makes the smallest coherent change, reuses skills before adding new ones, and writes a change note for human review. |
 
+## Morgan as the decision-maker
+Morgan (`program-lead`, opus) is the team's decision-maker for recommendations, but **Dan decides**:
+- Morgan reads Dan's business brief (`knowledge/program-lead/business-brief.md`: goals, budget, weekly hours, target ZIPs, ideal clients, success metrics; unknowns marked "TO CONFIRM WITH DAN").
+- When experts disagree, Morgan applies fixed rules in order:
+  1. Compliance (Grace) and consent (Ivy) override marketing.
+  2. Dan's budget and hours limits override any plan.
+  3. Anything uncertain, involving money, legal risk, or client contact goes to Dan.
+  4. Stronger evidence wins.
+  5. The safer, reversible option wins.
+- Morgan states each disagreement, the tie-breaker used, and the final recommendation, and records it in `drafts/decision-log.md` (decision-log skill) with what Dan must approve.
+- All outputs stay drafts; nothing is sent.
+
 ## Changing a brain
 - Edit the agent's `model:` line (`opus`, `sonnet`, `haiku`, a full model ID, or `inherit`), or ask `/improve-team` to do it.
 - Claude Code picks the model in this order: a `model` passed on the individual Agent call (the Program Lead is told not to do this), then the agent's `model:` field, then the `CLAUDE_CODE_SUBAGENT_MODEL` environment variable, then the main conversation's model. Setting `CLAUDE_CODE_SUBAGENT_MODEL` with `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` forces one model on every agent and ignores these choices.
