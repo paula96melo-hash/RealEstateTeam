@@ -26,7 +26,7 @@ Example prompts: [docs/how-to-talk-to-your-experts.md](docs/how-to-talk-to-your-
 **Web app:** [`web/`](web/README.md) is a React app (deployed on Netlify) with the same team: a sidebar of agents, a chat window, and "Ask the whole team". It reads the agents, skills, docs, and knowledge folders at build time, calls the Claude API only from a Netlify Function (`ANTHROPIC_API_KEY`, optional `APP_PASSWORD`), and only shows drafts. With no API key it runs in **demo mode**: saved example answers from `web/demo-examples/` (sample data only), clearly labelled, with no AI calls.
 
 ## The team (22 agents in `.claude/agents/`)
-**Orchestrator:** `program-lead` (Morgan) takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. Morgan is the team's decision-maker for recommendations: Morgan reads Dan's business brief (`knowledge/program-lead/business-brief.md`), resolves disagreements with fixed rules (compliance and consent override marketing; Dan's budget and weekly-hours limits override any plan; anything uncertain, involving money, legal risk, or client contact goes to Dan), and records each recommendation in `drafts/decision-log.md`. **Morgan recommends; Dan decides. Everything stays a draft.** It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.
+**Orchestrator:** `program-lead` (Morgan) takes any question, picks the experts, has them build on each other's work, sends drafts through compliance, and returns one answer. Morgan is the team's decision-maker for recommendations: Morgan reads the realtor's business brief (`knowledge/program-lead/business-brief.md`), resolves disagreements with fixed rules (compliance and consent override marketing; the realtor's budget and weekly-hours limits override any plan; anything uncertain, involving money, legal risk, or client contact goes to the realtor), and records each recommendation in `drafts/decision-log.md`. **Morgan recommends; the realtor decides. Everything stays a draft.** It can spawn only the 20 specialists below. It cannot spawn built-in agents or `team-architect`.
 
 **Meta:** `team-architect` creates and improves agents and skills. It writes only to `.claude/agents/`, `.claude/skills/`, and `drafts/`, and a validator rejects any file that breaks the guardrails.
 
@@ -69,7 +69,7 @@ docs/                 Research (01–08), README index, expert-roster.md (roles 
 knowledge/            One folder per agent, read before every answer (sample/anonymized data only)
 web/                  React web app + Netlify Function (see web/README.md); netlify.toml at the repo root
 drafts/               The only place agents write (gitignored except README and decision-log.md)
-  decision-log.md     Morgan's decisions: what, why, disagreements, what Dan must approve
+  decision-log.md     Morgan's decisions: what, why, disagreements, what the realtor must approve
   approval-queue/     Items awaiting compliance review and human approval
   answers/  regulatory-updates/  team-changes/
 ```

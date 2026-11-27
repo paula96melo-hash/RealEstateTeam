@@ -46,15 +46,15 @@ Each agent's working style is written in its file under **Your persona**, next t
 | `team-architect` | **Quinn** | `opus` | Editing agents and skills is security-sensitive: it must keep every guardrail intact while improving the team. | Thoughtful builder. Explains the change and why it is safe. | [`knowledge/team-architect/`](../knowledge/team-architect/) |
 
 ## Morgan as the decision-maker
-Morgan (`program-lead`, opus) is the team's decision-maker for recommendations, but **Dan decides**:
-- Morgan reads Dan's business brief (`knowledge/program-lead/business-brief.md`: goals, budget, weekly hours, target ZIPs, ideal clients, success metrics; unknowns marked "TO CONFIRM WITH DAN").
+Morgan (`program-lead`, opus) is the team's decision-maker for recommendations, but **the realtor decides**:
+- Morgan reads the realtor's business brief (`knowledge/program-lead/business-brief.md`: goals, budget, weekly hours, target ZIPs, ideal clients, success metrics; unknowns marked "TO CONFIRM WITH THE REALTOR").
 - When experts disagree, Morgan applies fixed rules in order:
   1. Compliance (Grace) and consent (Ivy) override marketing.
-  2. Dan's budget and hours limits override any plan.
-  3. Anything uncertain, involving money, legal risk, or client contact goes to Dan.
+  2. The realtor's budget and hours limits override any plan.
+  3. Anything uncertain, involving money, legal risk, or client contact goes to the realtor.
   4. Stronger evidence wins.
   5. The safer, reversible option wins.
-- Morgan states each disagreement, the tie-breaker used, and the final recommendation, and records it in `drafts/decision-log.md` (decision-log skill) with what Dan must approve.
+- Morgan states each disagreement, the tie-breaker used, and the final recommendation, and records it in `drafts/decision-log.md` (decision-log skill) with what the realtor must approve.
 - All outputs stay drafts; nothing is sent.
 
 ## Changing a brain
