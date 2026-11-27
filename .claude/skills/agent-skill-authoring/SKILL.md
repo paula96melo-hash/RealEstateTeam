@@ -27,7 +27,7 @@ hooks:
           command: 'python3 "$CLAUDE_PROJECT_DIR/.claude/hooks/guard_writes.py" drafts || exit 2'
 ---
 ```
-Body = system prompt: "Your name is **[First name]**. You are the **[Role]**…", mission, rules recap, `## Your persona` (name, voice, working style; tone only), `## Your knowledge folder (read it first, every time)` pointing to `knowledge/<kebab-name>/`, sources, how you work, output format, handoffs. Give each new agent a first name not already used (see `docs/agent-brains.md`).
+Body = system prompt: "Your name is **[First name]**. You are the **[Role]**…", mission, rules recap, `## Your persona` (name, voice, working style; tone only), `## Before you answer` telling it to read its knowledge folder `knowledge/<kebab-name>/` first, sources, how you work, output format, handoffs. Give each new agent a first name not already used (see `docs/agent-brains.md`).
 
 **Allowed tools only:** Read, Grep, Glob, Skill, Write, Edit (with the guard hook), WebSearch, WebFetch, TodoWrite. `Agent` only for an orchestrator with the `restrict_agent_spawn.py` hook. Forbidden: Bash, PowerShell, NotebookEdit, MCP tools, Artifact, SendMessage, any tool that sends, posts, publishes, buys, or schedules. Forbidden fields: permissionMode, mcpServers, memory, isolation. Never omit `tools:` (that inherits everything). The guard hook rejects violations.
 
